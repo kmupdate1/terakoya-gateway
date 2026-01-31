@@ -7,19 +7,22 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 
-fun Application.module() {
+fun Application.sampleModule() {
     routing {
         // 司令官専用：CloudHook 実弾受信エンドポイント
         post("/terakoyalabo/cloudhook/github") {
             // Rawテキストとして受信
             val rawJson = call.receiveText()
 
-            println("\n" + "=".repeat(60))
-            println("📡 [CloudHook] 信号を検知しました")
-            println("Time: ${java.time.LocalDateTime.now()}")
-            println("-".repeat(60))
-            println(rawJson) // ここに生JSONがドバッと出ます
-            println("=".repeat(60) + "\n")
+            val printStr = buildString {
+                append("\n" + "=".repeat(60))
+                append("📡 [CloudHook] 信号を検知しました")
+                append("Time: ${java.time.LocalDateTime.now()}")
+                append("-".repeat(60))
+                append(rawJson) // ここに生JSONがドバッと出ます
+                append("=".repeat(60) + "\n")
+            }
+            println(printStr)
 
             // GitHubへの応答
             call.respondText("Roger that! Terakoya M4 is on duty.")
