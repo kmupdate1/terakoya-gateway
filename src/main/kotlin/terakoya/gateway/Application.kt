@@ -15,12 +15,12 @@ fun Application.sampleModule() {
             val rawJson = call.receiveText()
 
             val printStr = buildString {
-                append("\n" + "=".repeat(60))
-                append("📡 [CloudHook] 信号を検知しました")
-                append("Time: ${java.time.LocalDateTime.now()}")
-                append("-".repeat(60))
-                append(rawJson) // ここに生JSONがドバッと出ます
-                append("=".repeat(60) + "\n")
+                appendLine("\n" + "=".repeat(60))
+                appendLine("📡 [CloudHook] 信号を検知しました")
+                appendLine("Time: ${java.time.LocalDateTime.now()}")
+                appendLine("-".repeat(60))
+                appendLine(rawJson) // ここに生JSONがドバッと出ます
+                appendLine("=".repeat(60) + "\n")
             }
             println(printStr)
 
