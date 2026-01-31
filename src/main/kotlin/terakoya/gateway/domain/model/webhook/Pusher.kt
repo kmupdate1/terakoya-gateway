@@ -1,0 +1,13 @@
+package terakoya.gateway.domain.model.webhook
+
+import terakoya.gateway.domain.model.validate
+
+@JvmInline
+value class Pusher private constructor(val name: String) {
+    companion object {
+        fun of(pusher: Pusher): Pusher = Pusher(pusher.name).validate(
+            condition = { !it.name.isEmpty() },
+            lazyMessage = { "Pusher name must not be empty." }
+        )
+    }
+}

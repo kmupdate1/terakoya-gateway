@@ -2,6 +2,7 @@ plugins {
     `maven-publish`
     alias { libs.plugins.kotlin.jvm }
     alias { libs.plugins.kotlin.serialization }
+    alias { libs.plugins.ktor.plugin }
 }
 
 group = "jp.lax256.terakoya"
@@ -9,6 +10,10 @@ version = "0.1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+}
+
+application {
+    mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
 dependencies {
@@ -32,13 +37,19 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(21)
 }
 
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components["java"])
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+
+            artifact(file("${project.layout.buildDirectory.get()}/libs/${project.name}-all.jar")) {
+                classifier = "all"
+            }
         }
     }
     repositories {
@@ -46,7 +57,7 @@ publishing {
             val repoName = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
 
             name = "TerakoyaNexus"
-            url = uri("http://100.98.144.29:8081/nexus/repository/maven-$repoName/")
+            url = uri("http://100.98.144.29:8081/repository/maven-$repoName")
 
             isAllowInsecureProtocol = true
             credentials {
@@ -57,6 +68,13 @@ publishing {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+
+    // publishタスクは、必ずbuildFatJarが完了してから実行されるように強制する
+    withType<PublishToMavenRepository> {
+        dependsOn(buildFatJar)
+    }
 }
