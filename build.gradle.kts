@@ -1,3 +1,5 @@
+import java.net.NetworkInterface
+
 plugins {
     `maven-publish`
     alias { libs.plugins.kotlin.jvm }
@@ -5,8 +7,14 @@ plugins {
     alias { libs.plugins.ktor.plugin }
 }
 
-group = "jp.lax256.terakoya"
+group = "jp.terakoyalabo"
 version = "0.1.0-SNAPSHOT"
+
+val isAtLabo = NetworkInterface.getNetworkInterfaces().asSequence().any { iface ->
+    iface.inetAddresses.asSequence().any { addr ->
+        addr.hostAddress.startsWith("192.168.11.")
+    }
+}
 
 repositories {
     mavenCentral()
@@ -56,8 +64,11 @@ publishing {
         maven {
             val repoName = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
 
+            val address = if (isAtLabo) project.findProperty("nexus.ip.labonet")?.toString()
+            else project.findProperty("nexus.ip.vpn")?.toString()
+
             name = "TerakoyaNexus"
-            url = uri("http://100.98.144.29:8081/repository/maven-$repoName")
+            url = uri("http://$address:8081/repository/maven-$repoName")
 
             isAllowInsecureProtocol = true
             credentials {

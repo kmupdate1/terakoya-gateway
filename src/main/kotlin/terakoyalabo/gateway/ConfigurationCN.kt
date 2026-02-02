@@ -1,4 +1,4 @@
-package terakoya.gateway
+package terakoyalabo.gateway
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -8,9 +8,12 @@ import kotlinx.serialization.json.Json
 
 fun Application.configureContentNegotiation() {
     install(ContentNegotiation) {
-        json(Json {
+        val json = Json {
             ignoreUnknownKeys = true
+            coerceInputValues = true
             explicitNulls = false
-        })
+        }
+
+        json(json)
     }
 }

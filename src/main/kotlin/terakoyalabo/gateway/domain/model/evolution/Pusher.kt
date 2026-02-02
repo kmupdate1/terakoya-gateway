@@ -1,6 +1,6 @@
-package terakoya.gateway.domain.model.webhook
+package terakoyalabo.gateway.domain.model.evolution
 
-import terakoya.gateway.domain.model.validate
+import terakoyalabo.gateway.domain.model.validate
 
 @JvmInline
 value class Pusher private constructor(val name: String) {

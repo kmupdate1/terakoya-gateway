@@ -1,4 +1,4 @@
-package terakoya.gateway.domain
+package terakoyalabo.gateway.domain
 
 abstract class DomainException(
     override val message: String,

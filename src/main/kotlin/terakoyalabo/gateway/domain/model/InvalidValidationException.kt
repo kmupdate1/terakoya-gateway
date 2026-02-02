@@ -1,8 +1,8 @@
-package terakoya.gateway.domain.model
+package terakoyalabo.gateway.domain.model
 
-import terakoya.gateway.domain.DomainException
+import terakoyalabo.gateway.domain.DomainException
 
-abstract class ModelException(
+class InvalidValidationException(
     override val message: String,
     override val cause: Throwable? = null,
 ) : DomainException(message = message, cause = cause)

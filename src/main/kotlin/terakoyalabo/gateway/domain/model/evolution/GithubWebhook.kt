@@ -1,4 +1,4 @@
-package terakoya.gateway.domain.model.webhook
+package terakoyalabo.gateway.domain.model.evolution
 
 import java.time.LocalDateTime
 
