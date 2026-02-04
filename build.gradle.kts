@@ -7,7 +7,7 @@ plugins {
     alias { libs.plugins.ktor.plugin }
 }
 
-group = "jp.terakoyalabo"
+group = "jp.terakoyalabo.cloud"
 version = "0.1.0-SNAPSHOT"
 
 val isAtLabo = NetworkInterface.getNetworkInterfaces().asSequence().any { iface ->
@@ -62,13 +62,13 @@ publishing {
     }
     repositories {
         maven {
-            val repoName = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
+            val repoType = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
 
             val address = if (isAtLabo) project.findProperty("nexus.ip.labonet")?.toString()
-            else project.findProperty("nexus.ip.vpn")?.toString()
+            else project.findProperty("nexus.ip.vpn")?.toString() ?: "100.98.144.29"
 
             name = "TerakoyaNexus"
-            url = uri("http://$address:8081/repository/maven-$repoName")
+            url = uri("http://$address:8081/repository/terakoyalabo-app-$repoType")
 
             isAllowInsecureProtocol = true
             credentials {
