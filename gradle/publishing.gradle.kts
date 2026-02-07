@@ -21,7 +21,7 @@ configure<org.gradle.api.publish.PublishingExtension> {
             val domain = System.getenv("TERAKOYALABO_DOMAIN") ?: "https://terakoyalabo.live-on.net"
 
             name = "TerakoyaNexus"
-            url = uri("$domain/repository/terakoyalabo-library-$repoType")
+            url = uri("$domain/repository/terakoyalabo-app-$repoType")
 
             credentials {
                 username = System.getenv("TERAKOYA_NEXUS_USERNAME")
