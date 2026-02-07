@@ -9,7 +9,7 @@ plugins {
 val isRelease = project.hasProperty("release") && project.property("release") == "true"
 val currentVersion = rootProject.findProperty("version.gateway")?.toString() ?: "unspecified"
 
-group = "jp.terakoyalabo"
+group = "jp.terakoyalabo.cloud"
 version = if (isRelease) currentVersion else "$currentVersion-SNAPSHOT"
 
 extra["isRelease"] = isRelease
