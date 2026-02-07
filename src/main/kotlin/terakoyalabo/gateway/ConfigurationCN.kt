@@ -11,6 +11,8 @@ fun Application.configureContentNegotiation() {
         val json = Json {
             ignoreUnknownKeys = true
             coerceInputValues = true
+            isLenient = true
+            prettyPrint = true
             explicitNulls = false
         }
 
