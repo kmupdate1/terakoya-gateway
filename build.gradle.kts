@@ -1,5 +1,3 @@
-import java.net.NetworkInterface
-
 plugins {
     `maven-publish`
     alias { libs.plugins.kotlin.jvm }
@@ -7,14 +5,14 @@ plugins {
     alias { libs.plugins.ktor.plugin }
 }
 
-group = "jp.terakoyalabo.cloud"
-version = "0.1.0-SNAPSHOT"
+// コマンド実行時に -Prelease=true をつけた時だけ本番モード
+val isRelease = project.hasProperty("release") && project.property("release") == "true"
+val currentVersion = rootProject.findProperty("version.gateway")?.toString() ?: "unspecified"
 
-val isAtLabo = NetworkInterface.getNetworkInterfaces().asSequence().any { iface ->
-    iface.inetAddresses.asSequence().any { addr ->
-        addr.hostAddress.startsWith("192.168.11.")
-    }
-}
+group = "jp.terakoyalabo.gateway"
+version = if (isRelease) currentVersion else "$currentVersion-SNAPSHOT"
+
+extra["isRelease"] = isRelease
 
 repositories {
     mavenCentral()
@@ -48,36 +46,8 @@ kotlin {
     jvmToolchain(21)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            groupId = project.group.toString()
-            artifactId = project.name
-            version = project.version.toString()
-
-            artifact(file("${project.layout.buildDirectory.get()}/libs/${project.name}-all.jar")) {
-                classifier = "all"
-            }
-        }
-    }
-    repositories {
-        maven {
-            val repoType = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
-
-            val address = if (isAtLabo) project.findProperty("nexus.ip.labonet")?.toString()
-            else project.findProperty("nexus.ip.vpn")?.toString() ?: "100.98.144.29"
-
-            name = "TerakoyaNexus"
-            url = uri("http://$address:8081/repository/terakoyalabo-app-$repoType")
-
-            isAllowInsecureProtocol = true
-            credentials {
-                username = project.findProperty("nexus.username")?.toString()
-                password = project.findProperty("nexus.password")?.toString()
-            }
-        }
-    }
-}
+// apply(from = "gradle/sonar.gradle.kts")
+apply(from = "gradle/publishing.gradle.kts")
 
 tasks {
     test {
